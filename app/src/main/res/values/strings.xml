@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Yusuf\'s Movie App</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_favs">Favourites</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="all_movies">Most Popular</string>
+    <string name="add_to_favs">ADD TO FAVOURITES</string>
+    <string name="remove_from_favs">REMOVE FROM FAVOURITES</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+</resources>
