@@ -1,4 +1,4 @@
-package com.yusufsmovieapp;
+package com.yusufsmovieapp.model;
 
 import java.io.Serializable;
 

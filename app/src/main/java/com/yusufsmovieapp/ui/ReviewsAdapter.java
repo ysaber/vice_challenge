@@ -1,36 +1,38 @@
-package com.yusufsmovieapp;
+package com.yusufsmovieapp.ui;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.yusufsmovieapp.R;
+import com.yusufsmovieapp.model.Review;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 @SuppressWarnings("WeakerAccess")
-public class TrailersAdapter extends BaseAdapter {
+public class ReviewsAdapter extends BaseAdapter {
 
-    private YouTubeTrailer[] trailers;
+    private Review[] reviews;
 
 
-    public void replaceTrailers(YouTubeTrailer[] trailers) {
-        this.trailers = trailers;
+    public void replaceReviews(Review [] reviews) {
+        this.reviews = reviews;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return trailers.length;
+        return reviews.length;
     }
 
     @Override
-    public YouTubeTrailer getItem(int position) {
-        return trailers[position];
+    public Review getItem(int position) {
+        return reviews[position];
     }
 
     @Override
@@ -42,31 +44,34 @@ public class TrailersAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         final Context context = parent.getContext();
-        final YouTubeTrailer trailer = getItem(position);
+        final Review review = getItem(position);
 
         ViewHolder holder;
         if (convertView != null) {
             holder = (ViewHolder) convertView.getTag();
         } else {
-            convertView = LayoutInflater.from(context).inflate(R.layout.trailer_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.review_item, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         }
 
-        holder.title.setText(trailer.getName());
+        holder.author.setText(review.getAuthor());
+        holder.review.setText(review.getContent());
 
         convertView.setOnClickListener(new View.OnClickListener() {
-
+            @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + trailer.getSource())));
+                Toast.makeText(context, review.getContent(), Toast.LENGTH_LONG).show();
             }
         });
 
         return convertView;
     }
 
+
     static class ViewHolder {
-        @BindView(R.id.title) TextView title;
+        @BindView(R.id.author) TextView author;
+        @BindView(R.id.review) TextView review;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

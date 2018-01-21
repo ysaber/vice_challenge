@@ -19,7 +19,7 @@
         android:textSize="@dimen/label_text_size" />
 
 
-    <com.yusufsmovieapp.HorizontalListView
+    <com.yusufsmovieapp.ui.HorizontalListView
         android:id="@+id/now_playing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

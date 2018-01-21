@@ -1,4 +1,4 @@
-package com.yusufsmovieapp;
+package com.yusufsmovieapp.controller;
 
 import android.content.Context;
 
@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
+import com.yusufsmovieapp.MoviesApplication;
 
 import org.json.JSONObject;
 

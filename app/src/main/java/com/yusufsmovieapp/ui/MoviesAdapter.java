@@ -1,4 +1,4 @@
-package com.yusufsmovieapp;
+package com.yusufsmovieapp.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.yusufsmovieapp.controller.ApiManager;
+import com.yusufsmovieapp.model.Movie;
+import com.yusufsmovieapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

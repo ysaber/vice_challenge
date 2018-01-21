@@ -1,4 +1,4 @@
-package com.yusufsmovieapp;
+package com.yusufsmovieapp.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;

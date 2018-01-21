@@ -1,4 +1,4 @@
-package com.yusufsmovieapp;
+package com.yusufsmovieapp.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;

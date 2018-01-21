@@ -113,7 +113,7 @@
         android:textColor="@color/label_text_color"
         android:textSize="@dimen/label_text_size" />
 
-    <com.yusufsmovieapp.HorizontalListView
+    <com.yusufsmovieapp.ui.HorizontalListView
         android:id="@+id/trailers_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -134,6 +134,8 @@
     <ListView
         android:id="@+id/reviews_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:dividerHeight="0dp"
+        android:divider="@null" />
 
 </LinearLayout>

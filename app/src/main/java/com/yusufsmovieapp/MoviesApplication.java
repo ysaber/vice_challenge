@@ -3,6 +3,10 @@ package com.yusufsmovieapp;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 
+import com.yusufsmovieapp.controller.db.AppDatabase;
+import com.yusufsmovieapp.controller.db.MoviesDao;
+import com.yusufsmovieapp.model.Genre;
+
 import java.util.ArrayList;
 import java.util.List;
 

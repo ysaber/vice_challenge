@@ -1,4 +1,4 @@
-package com.yusufsmovieapp;
+package com.yusufsmovieapp.ui;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -15,15 +15,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.yusufsmovieapp.MoviesApplication;
+import com.yusufsmovieapp.R;
+import com.yusufsmovieapp.Util;
+import com.yusufsmovieapp.controller.ApiManager;
+import com.yusufsmovieapp.controller.IMovieProvider;
+import com.yusufsmovieapp.controller.MoviesCompiledListener;
+import com.yusufsmovieapp.controller.TmdbMovieProvider;
+import com.yusufsmovieapp.controller.db.MoviesDao;
+import com.yusufsmovieapp.model.Movie;
+import com.yusufsmovieapp.model.Review;
+import com.yusufsmovieapp.model.YouTubeTrailer;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -35,15 +41,13 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     public final static String KEY_MOVIE = "movie_key";
 
-    private MoviesDao moviesDao;
+    final private IMovieProvider movieProvider = new TmdbMovieProvider();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
-
-        moviesDao = MoviesApplication.getInstance().getMoviesDao();
 
         final Bundle extras = getIntent().getExtras();
         if (extras != null && extras.containsKey(KEY_MOVIE)) {
@@ -66,51 +70,19 @@ public class MovieDetailActivity extends AppCompatActivity {
      * @param movie Movie to download
      */
     private void loadMovieDetails(final Movie movie) {
-        ApiManager.getInstance(this).getMovieDetails(movie.getId(), new Response.Listener<JSONObject>() {
+        movieProvider.getMovieDetails(this, movie, new MoviesCompiledListener() {
             @Override
-            public void onResponse(JSONObject response) {
-                parseMovieDetails(movie, response);
+            public void onCompiled(List<Movie> movies) {
+                initUI(movies.get(0));
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
 
+            @Override
+            public void onError(String errorMessage) {
+                Util.longToast(MovieDetailActivity.this, errorMessage);
             }
         });
     }
 
-    /**
-     * Parse the JSONObject into a Movie object and update the UI
-     */
-    private void parseMovieDetails(Movie movie, JSONObject response) {
-        try {
-
-            final Gson gson = new Gson();
-
-            final JSONArray reviewsJsonArray = response.getJSONObject("reviews").getJSONArray("results");
-            final JSONArray trailersJsonArray = response.getJSONObject("trailers").getJSONArray("youtube");
-
-            final Review [] reviews = new Review[reviewsJsonArray.length()];
-            final YouTubeTrailer [] trailers = new YouTubeTrailer[trailersJsonArray.length()];
-
-            for (int i = 0; i < reviewsJsonArray.length(); i++) {
-                Review review = gson.fromJson(reviewsJsonArray.get(i).toString(), Review.class);
-                reviews[i] = review;
-            }
-
-            for (int i = 0; i < trailersJsonArray.length(); i++) {
-                YouTubeTrailer trailer = gson.fromJson(trailersJsonArray.get(i).toString(), YouTubeTrailer.class);
-                trailers[i] = trailer;
-            }
-
-            movie.setReviews(reviews);
-            movie.setTrailers(trailers);
-            initUI(movie);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     /**
@@ -180,14 +152,14 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         ApiManager.getPicasso().load(ApiManager.BACKDROP_PREFIX + movie.getBackdrop()).into(target);
 
-        final Review [] reviews = movie.getReviews();
+        final Review[] reviews = movie.getReviews();
         if (reviews != null && reviews.length > 0) {
             final ReviewsAdapter reviewsAdapter = new ReviewsAdapter();
             reviewsAdapter.replaceReviews(reviews);
             ((ListView) findViewById(R.id.reviews_container)).setAdapter(reviewsAdapter);
         }
 
-        final YouTubeTrailer [] trailers = movie.getTrailers();
+        final YouTubeTrailer[] trailers = movie.getTrailers();
         if (trailers != null && trailers.length > 0) {
             final TrailersAdapter trailersAdapter = new TrailersAdapter();
             trailersAdapter.replaceTrailers(trailers);
@@ -216,6 +188,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... voids) {
+                final MoviesDao moviesDao = MoviesApplication.getInstance().getMoviesDao();
                 moviesDao.insertAllWithReplace(movie);
                 return null;
             }
